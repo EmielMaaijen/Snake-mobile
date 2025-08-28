@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>WARP Systems - Snake</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-wrapper">
+        <div class="game-container">
+            <div class="header">
+                <div class="header-section left">
+                    <div id="score-box">
+                        <img src="food.png" alt="Food icon">
+                        <span id="score">0</span>
+                    </div>
+                    <div id="timer-box">
+                        <span>Tijd: </span>
+                        <span id="timer">00:00</span>
+                    </div>
+                </div>
+                <div class="header-section middle">
+                    <h1>WARP SSSSYSTEMS SNAKE</h1>
+                </div>
+                <div class="header-section right"></div>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+            <div id="startScreen" class="game-overlay">
+                <button id="showInstructionsButton">Start Spel</button>
+            </div>
+            <div id="instructionsScreen" class="game-overlay hidden">
+                <button id="startGameButton">SSSStart</button>
+            </div>
+            <div id="gameOverScreen" class="game-overlay hidden">
+                <h2>Game Over</h2>
+                <p>Eindscore: <span id="finalScore">0</span></p>
+                <button id="restartButton">Probeer Opnieuw</button>
+            </div>
+        </div>
+
+        <div id="mobileControls">
+            <button id="btnUp" class="ctrl-btn">▲</button>
+            <div class="side-buttons">
+                <button id="btnLeft" class="ctrl-btn">◄</button>
+                <button id="btnRight" class="ctrl-btn">►</button>
+            </div>
+            <button id="btnDown" class="ctrl-btn">▼</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

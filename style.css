@@ -1,0 +1,200 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.game-container {
+    border: 10px solid #4CAF50;
+    border-radius: 15px;
+    background-color: #000;
+    padding: 10px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 95vw;
+    max-height: 95vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border-bottom: 3px solid #388E3C;
+}
+
+.header-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.header-section.left {
+    justify-content: flex-start;
+}
+
+.header-section.middle {
+    justify-content: center;
+    text-align: center;
+}
+
+.header-section.middle h1 {
+    font-size: 1.5em;
+    white-space: nowrap;
+}
+
+.header-section.right {
+    justify-content: flex-end;
+}
+
+#score-box {
+    display: flex;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#score-box img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+#timer-box {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 25px;
+}
+
+#gameCanvas {
+    display: block;
+    background-image: url('speetile.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    z-index: 1;
+}
+
+.game-overlay {
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    text-align: center;
+}
+
+#startScreen {
+    background-image: url("jouw-afbeelding.png");
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-bottom: 8%;
+    padding-right: 15%;
+}
+
+#instructionsScreen {
+    background-image: url("jouw-uitleg-afbeelding.png");
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-bottom: 8%;
+    padding-right: 15%;
+}
+
+.game-overlay h1, .game-overlay h2 {
+    color: #4CAF50;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#showInstructionsButton, #startGameButton, #restartButton {
+    font-size: 1.4em;
+    padding: 18px 35px;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#mobileControls {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 15px;
+    user-select: none;
+}
+
+.side-buttons {
+    display: flex;
+    width: 200px;
+    justify-content: space-between;
+}
+
+.ctrl-btn {
+    width: 70px;
+    height: 70px;
+    background-color: #4CAF50;
+    color: white;
+    border: 2px solid #388E3C;
+    border-radius: 50%;
+    font-size: 2em;
+    line-height: 1.5;
+    text-align: center;
+    cursor: pointer;
+}
+
+.ctrl-btn:active {
+    background-color: #388E3C;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    #mobileControls {
+        display: flex;
+    }
+    .game-container {
+       max-height: 75vh;
+    }
+}
