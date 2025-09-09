@@ -8,7 +8,7 @@
 html, body {
     height: 100%;
     width: 100%;
-    overflow: hidden; /* Stopt "pull-to-refresh" */
+    overflow: hidden;
     background-color: #000;
     color: white;
     font-family: Arial, sans-serif;
@@ -49,20 +49,22 @@ html, body {
     border-bottom: 3px solid #388E3C;
 }
 
+/* --- AANGEPAST VOOR MOBIEL --- */
 .header-section {
-    flex: 1;
     display: flex;
     align-items: center;
 }
 
 .header-section.left {
+    flex-grow: 1;
     justify-content: flex-start;
 }
 
 .header-section.middle {
-    justify-content: center;
-    text-align: center;
+    flex-shrink: 0; /* Voorkom dat de titel krimpt */
+    padding: 0 10px; /* Voeg wat ruimte toe rond de titel */
 }
+/* --- EINDE AANPASSING --- */
 
 .header-section.middle h1 {
     font-size: 1.5em;
@@ -70,6 +72,7 @@ html, body {
 }
 
 .header-section.right {
+    flex-grow: 1;
     justify-content: flex-end;
 }
 
@@ -113,8 +116,7 @@ html, body {
     text-align: center;
 }
 
-#startScreen {
-    background-image: url("jouw-afbeelding.png");
+#startScreen, #instructionsScreen {
     background-size: cover;
     background-position: center;
     justify-content: flex-end;
@@ -123,19 +125,10 @@ html, body {
     padding-right: 15%;
 }
 
-#instructionsScreen {
-    background-image: url("jouw-uitleg-afbeelding.png");
-    background-size: cover;
-    background-position: center;
-    justify-content: flex-end;
-    align-items: flex-end;
-    padding-bottom: 8%;
-    padding-right: 15%;
-}
+#startScreen { background-image: url("jouw-afbeelding.png"); }
+#instructionsScreen { background-image: url("jouw-uitleg-afbeelding.png"); }
 
-.game-overlay h1, .game-overlay h2 {
-    color: #4CAF50;
-}
+.game-overlay h1, .game-overlay h2 { color: #4CAF50; }
 
 button {
     background-color: #4CAF50;
@@ -154,9 +147,7 @@ button {
     font-weight: bold;
 }
 
-.hidden {
-    display: none !important;
-}
+.hidden { display: none !important; }
 
 #mobileControls {
     display: none;
@@ -186,15 +177,28 @@ button {
     cursor: pointer;
 }
 
-.ctrl-btn:active {
-    background-color: #388E3C;
-}
+.ctrl-btn:active { background-color: #388E3C; }
 
+/* --- BELANGRIJKE REGELS VOOR MOBIEL --- */
 @media (hover: none) and (pointer: coarse) {
     #mobileControls {
         display: flex;
     }
     .game-container {
        max-height: 75vh;
+    }
+}
+
+/* Regel om de header kleiner te maken op smalle schermen */
+@media (max-width: 768px) {
+    .header-section.middle h1 {
+        font-size: 1em; /* Kleinere titel op mobiel */
+    }
+    #score-box, #timer-box {
+        font-size: 1em; /* Kleinere score/timer op mobiel */
+    }
+    #score-box img {
+        width: 20px;
+        height: 20px;
     }
 }
