@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupCanvasAndGame() {
         const header = document.querySelector('.header');
         if (!header) {
-            setTimeout(setupCanvasAndGame, 50); // Probeer opnieuw als de header nog niet is geladen
+            setTimeout(setupCanvasAndGame, 50); 
             return;
         }
 
@@ -310,7 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startGameButton.addEventListener('click', startGame);
     restartButton.addEventListener('click', setupCanvasAndGame);
-    window.addEventListener('resize', setupCanvasAndGame);
+    
+    window.addEventListener('resize', () => {
+        setTimeout(setupCanvasAndGame, 100);
+    });
 
     const handleKeyDown = (e) => {
         if (isGameOver) return;
@@ -334,9 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const newDirection = direction();
-        // Prevent 180 degree turns on mobile
-        if ((newDirection.x !== 0 && currentDirection.x !== -newDirection.x) ||
-            (newDirection.y !== 0 && currentDirection.y !== -newDirection.y)) {
+        if ((newDirection.y !== 0 && currentDirection.y !== -newDirection.y) || 
+            (newDirection.x !== 0 && currentDirection.x !== -newDirection.x)) {
             desiredDirection = newDirection;
         }
     };
