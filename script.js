@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnDown = document.getElementById('btnDown');
     const btnLeft = document.getElementById('btnLeft');
     const btnRight = document.getElementById('btnRight');
+    const mobileControls = document.getElementById('mobileControls');
 
     // Spelinstellingen
     let gridSize;
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const foodImage = new Image();
     foodImage.src = 'food.png';
-    foodImage.onerror = () => alert("food.png niet gevonden!");
+    foodImage.onerror = () => console.error("food.png niet gevonden!");
 
     // Spelvariabelen
     let snake, food, score, gameInterval, isGameOver;
@@ -41,71 +42,81 @@ document.addEventListener('DOMContentLoaded', () => {
     let desiredDirection = { x: 0, y: 0 };
     let gameTimerInterval, elapsedTime = 0;
 
+    // Functie om de canvasgrootte en overlays in te stellen
     function setupCanvasAndGame() {
-        const header = document.querySelector('.header');
-        if (!header) {
-            setTimeout(setupCanvasAndGame, 50); 
-            return;
-        }
+        // Gebruik requestAnimationFrame voor een soepeler proces
+        requestAnimationFrame(() => {
+            const header = document.querySelector('.header');
+            // Wacht tot de DOM volledig is gerenderd en metingen correct zijn
+            if (!header || header.offsetHeight === 0 || mobileControls.offsetHeight === 0 && getComputedStyle(mobileControls).display !== 'none') {
+                setTimeout(setupCanvasAndGame, 100); // Probeer opnieuw als elementen nog niet gemeten kunnen worden
+                return;
+            }
 
-        const headerHeight = header.offsetHeight;
-        const controlsHeight = document.getElementById('mobileControls').offsetHeight;
-        const containerPadding = 40;
+            const headerHeight = header.offsetHeight;
+            const controlsHeight = (getComputedStyle(mobileControls).display !== 'none') ? mobileControls.offsetHeight : 0;
+            const gameContainerPadding = 20; // 10px boven, 10px onder
+            const wrapperPadding = 20; // 10px boven, 10px onder van de wrapper
 
-        let availableWidth = window.innerWidth - containerPadding;
-        let availableHeight = window.innerHeight - headerHeight - containerPadding;
-        
-        if (getComputedStyle(document.getElementById('mobileControls')).display !== 'none') {
-            availableHeight -= controlsHeight;
-        }
+            // Beschikbare ruimte voor de game (breedte en hoogte)
+            let availableWidth = window.innerWidth - wrapperPadding - gameContainerPadding;
+            let availableHeight = window.innerHeight - wrapperPadding - gameContainerPadding - headerHeight - controlsHeight;
 
-        const ratioX = availableWidth / tileCountX;
-        const ratioY = availableHeight / tileCountY;
-        
-        gridSize = Math.floor(Math.min(ratioX, ratioY));
-        
-        canvas.width = tileCountX * gridSize;
-        canvas.height = tileCountY * gridSize;
+            const ratioX = availableWidth / tileCountX;
+            const ratioY = availableHeight / tileCountY;
+            
+            gridSize = Math.floor(Math.min(ratioX, ratioY));
+            
+            // Zorg ervoor dat gridSize minimaal 10 is om fouten te voorkomen
+            if (gridSize < 10) gridSize = 10; 
 
-        createGridPatternMap();
+            canvas.width = tileCountX * gridSize;
+            canvas.height = tileCountY * gridSize;
 
-        const canvasTopOffset = canvas.offsetTop;
-        const canvasLeftOffset = canvas.offsetLeft;
-        overlays.forEach(overlay => {
-            overlay.style.top = `${canvasTopOffset}px`;
-            overlay.style.left = `${canvasLeftOffset}px`;
-            overlay.style.width = `${canvas.width}px`;
-            overlay.style.height = `${canvas.height}px`;
-        });
-        
-        let startPos = findSafeSpot();
-        if (!startPos) {
-            alert("Fout: Geen veilige startplek gevonden in de map!");
-            return;
-        }
-        snake = [startPos];
-        
-        food = generateFood();
-        score = 0;
-        isGameOver = false;
-        isPoweredUp = false;
-        
-        currentDirection = { x: 0, y: 0 };
-        desiredDirection = { x: 0, y: 0 };
-        
-        scoreElement.textContent = score;
-        if (finalScoreElement) finalScoreElement.textContent = score;
+            // Update game-container breedte om canvas te passen
+            gameContainer.style.width = `${canvas.width + gameContainerPadding}px`;
+            gameContainer.style.height = `${canvas.height + headerHeight + gameContainerPadding}px`;
 
-        clearInterval(gameTimerInterval);
-        clearInterval(gameInterval);
-        gameInterval = null;
-        elapsedTime = 0;
-        if(timerElement) timerElement.textContent = formatTime(elapsedTime);
-        
-        gameOverScreen.classList.add('hidden');
-        instructionsScreen.classList.add('hidden');
-        startScreen.classList.remove('hidden');
-        draw();
+
+            createGridPatternMap();
+
+            const canvasRect = canvas.getBoundingClientRect(); // Nauwkeurigere meting
+            overlays.forEach(overlay => {
+                overlay.style.top = `${canvasRect.top - gameContainer.getBoundingClientRect().top}px`;
+                overlay.style.left = `${canvasRect.left - gameContainer.getBoundingClientRect().left}px`;
+                overlay.style.width = `${canvas.width}px`;
+                overlay.style.height = `${canvas.height}px`;
+            });
+            
+            let startPos = findSafeSpot();
+            if (!startPos) {
+                console.error("Fout: Geen veilige startplek gevonden in de map!");
+                return;
+            }
+            snake = [startPos];
+            
+            food = generateFood();
+            score = 0;
+            isGameOver = false;
+            isPoweredUp = false;
+            
+            currentDirection = { x: 0, y: 0 };
+            desiredDirection = { x: 0, y: 0 };
+            
+            scoreElement.textContent = score;
+            if (finalScoreElement) finalScoreElement.textContent = score;
+
+            clearInterval(gameTimerInterval);
+            clearInterval(gameInterval);
+            gameInterval = null;
+            elapsedTime = 0;
+            if(timerElement) timerElement.textContent = formatTime(elapsedTime);
+            
+            gameOverScreen.classList.add('hidden');
+            instructionsScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            draw();
+        }); // Einde requestAnimationFrame
     }
     
     function createGridPatternMap() {
@@ -309,10 +320,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     startGameButton.addEventListener('click', startGame);
-    restartButton.addEventListener('click', setupCanvasAndGame);
+    restartButton.addEventListener('click', () => setTimeout(setupCanvasAndGame, 100));
     
+    // Luister naar resize events met een kleine debounce
+    let resizeTimeout;
     window.addEventListener('resize', () => {
-        setTimeout(setupCanvasAndGame, 100);
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(setupCanvasAndGame, 200);
     });
 
     const handleKeyDown = (e) => {
@@ -348,5 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); handleTouch(() => ({ x: -1, y: 0 })); });
     btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); handleTouch(() => ({ x: 1, y: 0 })); });
 
-    setTimeout(setupCanvasAndGame, 100);
+    // Initial call to setupCanvasAndGame met een korte vertraging
+    setTimeout(setupCanvasAndGame, 200);
 });
