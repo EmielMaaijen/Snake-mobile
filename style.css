@@ -2,13 +2,16 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* Voorkomt blauwe gloed bij tikken op mobiel */
 }
 
 html, body {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: hidden; /* Voorkomt scrollen op mobiel en "pull-to-refresh" */
+}
+
+body {
     background-color: #000;
     color: white;
     font-family: Arial, sans-serif;
@@ -21,9 +24,10 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Centreert de game-container en controls verticaal */
     width: 100%;
     height: 100%;
+    padding: 10px; /* Algemene padding voor de hele wrapper */
 }
 
 .game-container {
@@ -35,64 +39,67 @@ html, body {
     position: relative;
     display: flex;
     flex-direction: column;
-    max-width: 95vw;
-    max-height: 95vh;
+    flex-shrink: 1; /* Laat de container krimpen indien nodig */
+    flex-grow: 0; /* Voorkom dat de container onnodig groeit */
+    max-width: 100%; /* Neem maximale beschikbare breedte */
+    max-height: 100%; /* Neem maximale beschikbare hoogte */
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 15px;
+    padding: 5px 10px; /* Iets minder padding aan zijkanten */
     background-color: #4CAF50;
     color: white;
     border-bottom: 3px solid #388E3C;
+    flex-shrink: 0; /* Voorkom dat de header krimpt */
 }
 
-/* --- AANGEPAST VOOR MOBIEL --- */
 .header-section {
     display: flex;
     align-items: center;
 }
 
 .header-section.left {
-    flex-grow: 1;
+    flex-basis: 30%; /* Neemt 30% van de ruimte */
     justify-content: flex-start;
 }
 
 .header-section.middle {
-    flex-shrink: 0; /* Voorkom dat de titel krimpt */
-    padding: 0 10px; /* Voeg wat ruimte toe rond de titel */
+    flex-basis: 40%; /* Neemt 40% van de ruimte */
+    text-align: center;
+    justify-content: center;
+    overflow: hidden; /* Verbergt tekst die te lang is */
+    white-space: nowrap; /* Voorkomt afbreken van de titel */
 }
-/* --- EINDE AANPASSING --- */
 
 .header-section.middle h1 {
-    font-size: 1.5em;
-    white-space: nowrap;
+    font-size: 1.4em; /* Standaard lettergrootte */
 }
 
 .header-section.right {
-    flex-grow: 1;
+    flex-basis: 30%; /* Neemt 30% van de ruimte */
     justify-content: flex-end;
 }
 
 #score-box {
     display: flex;
     align-items: center;
-    font-size: 1.5em;
+    font-size: 1.3em; /* Iets kleiner voor betere pasvorm */
     font-weight: bold;
 }
 
 #score-box img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
+    width: 25px; /* Iets kleiner icoon */
+    height: 25px;
+    margin-right: 8px;
 }
 
 #timer-box {
-    font-size: 1.5em;
+    font-size: 1.3em; /* Iets kleiner */
     font-weight: bold;
-    margin-left: 25px;
+    margin-left: 15px; /* Iets minder marge */
 }
 
 #gameCanvas {
@@ -102,6 +109,8 @@ html, body {
     background-size: contain;
     background-position: center center;
     z-index: 1;
+    flex-grow: 1; /* Zorgt ervoor dat canvas de resterende ruimte vult */
+    flex-shrink: 1;
 }
 
 .game-overlay {
@@ -114,6 +123,10 @@ html, body {
     background-color: rgba(0, 0, 0, 0.9);
     color: white;
     text-align: center;
+    width: 100%; /* Overlays vullen de game-container */
+    height: 100%;
+    top: 0;
+    left: 0;
 }
 
 #startScreen, #instructionsScreen {
@@ -149,13 +162,14 @@ button {
 
 .hidden { display: none !important; }
 
+/* --- MOBIELE BESTURINGSKNOPPEN --- */
 #mobileControls {
-    display: none;
+    display: none; /* Standaard verborgen op desktop */
     flex-direction: column;
     align-items: center;
-    margin-top: auto;
-    padding-top: 15px;
+    margin-top: 20px; /* Ruimte boven de knoppen */
     user-select: none;
+    flex-shrink: 0; /* Voorkom dat de knoppen krimpen */
 }
 
 .side-buttons {
@@ -179,26 +193,71 @@ button {
 
 .ctrl-btn:active { background-color: #388E3C; }
 
-/* --- BELANGRIJKE REGELS VOOR MOBIEL --- */
+/* MEDIA QUERIES - Specifiek voor mobiele apparaten */
 @media (hover: none) and (pointer: coarse) {
     #mobileControls {
-        display: flex;
+        display: flex; /* Toon de mobiele knoppen */
     }
+
+    /* Optimalisatie voor smalle schermen in portretmodus */
+    .game-wrapper {
+        justify-content: flex-start; /* Begin bovenaan om ruimte voor knoppen te maken */
+        padding-top: 20px; /* Wat extra ruimte bovenaan */
+    }
+
     .game-container {
-       max-height: 75vh;
+        /* max-height wordt nu flexibeler berekend door JS */
+        margin-bottom: 15px; /* Ruimte tussen game en knoppen */
+    }
+
+    /* Kleinere header elementen op zeer smalle schermen */
+    .header-section.middle h1 {
+        font-size: 1em;
+    }
+    #score-box, #timer-box {
+        font-size: 1em;
+    }
+    #score-box img {
+        width: 18px;
+        height: 18px;
+        margin-right: 5px;
+    }
+    #timer-box {
+        margin-left: 10px;
+    }
+    .header {
+        padding: 3px 5px;
     }
 }
 
-/* Regel om de header kleiner te maken op smalle schermen */
-@media (max-width: 768px) {
-    .header-section.middle h1 {
-        font-size: 1em; /* Kleinere titel op mobiel */
+/* Extra aanpassing voor liggende weergave (landscape) op mobiel, als nodig */
+@media (max-height: 450px) and (orientation: landscape) {
+    .game-wrapper {
+        flex-direction: row; /* Zet game en controls naast elkaar */
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px;
     }
-    #score-box, #timer-box {
-        font-size: 1em; /* Kleinere score/timer op mobiel */
+    #mobileControls {
+        margin-top: 0;
+        margin-left: 20px; /* Ruimte tussen game en controls */
+        flex-direction: column; /* Houd knoppen verticaal gestapeld */
     }
-    #score-box img {
-        width: 20px;
-        height: 20px;
+    .game-container {
+        max-width: 60vw; /* Geef de controls ruimte */
+        margin-bottom: 0;
+    }
+    .side-buttons {
+        flex-direction: column; /* Stapel linker/rechter knop op elkaar */
+        height: 150px; /* Vaste hoogte voor verticale stapel */
+        width: auto;
+        justify-content: space-around;
+    }
+    #btnLeft, #btnRight {
+        width: 70px; /* Houd breedte gelijk */
+        height: 70px;
+    }
+    #btnUp, #btnDown {
+        margin: 0 0; /* Geen extra marge */
     }
 }
